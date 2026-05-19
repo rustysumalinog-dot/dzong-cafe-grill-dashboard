@@ -29,7 +29,7 @@ export function SalesChart({ data }: { data: { day: string; sales: number }[] })
           tickFormatter={(v) => `₱${(v / 1000).toFixed(0)}k`}
         />
         <Tooltip
-          formatter={(v: number) => formatPHP(v)}
+          formatter={(v) => formatPHP(Number(v))}
           contentStyle={{ borderRadius: 8, border: "1px solid #e5e7eb" }}
         />
         <Area
