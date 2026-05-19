@@ -24,7 +24,7 @@ export default function StaffPage() {
   return (
     <>
       <Topbar title="Staff & Scheduling" subtitle="Today's roster, attendance, labor cost" />
-      <main className="flex-1 p-8 space-y-6">
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <KpiCard label="Total crew" value={staff.length.toString()} icon={Users} hint="active employees" />
           <KpiCard label="On shift" value={onShift.toString()} icon={UserCheck} hint="clocked in" />
@@ -44,7 +44,8 @@ export default function StaffPage() {
             <h2 className="font-semibold text-lg">Today&apos;s roster</h2>
             <p className="text-xs text-muted">Shift assignments and attendance</p>
           </div>
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[680px]">
             <thead className="bg-background text-muted text-xs uppercase tracking-wide">
               <tr>
                 <th className="text-left px-6 py-3 font-semibold">Employee</th>
@@ -80,6 +81,7 @@ export default function StaffPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       </main>
     </>

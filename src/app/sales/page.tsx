@@ -14,7 +14,7 @@ export default function SalesPage() {
   return (
     <>
       <Topbar title="Sales & POS" subtitle="Daily transactions, top items, hourly traffic" />
-      <main className="flex-1 p-8 space-y-6">
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <KpiCard label="Today's Sales" value={formatPHP(todayKPIs.sales)} delta={todayKPIs.salesDeltaPct} icon={DollarSign} hint="vs last Sun" />
           <KpiCard label="Transactions" value={formatNumber(todayKPIs.transactions)} delta={todayKPIs.transactionsDeltaPct} icon={Receipt} hint="orders today" />
@@ -42,7 +42,8 @@ export default function SalesPage() {
               <p className="text-xs text-muted">{formatNumber(totalUnits)} units · {formatPHP(totalRevenue)} revenue</p>
             </div>
           </div>
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[640px]">
             <thead className="bg-background text-muted text-xs uppercase tracking-wide">
               <tr>
                 <th className="text-left px-6 py-3 font-semibold">Item</th>
@@ -68,6 +69,7 @@ export default function SalesPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       </main>
     </>

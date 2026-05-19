@@ -23,7 +23,7 @@ export default function InventoryPage() {
   return (
     <>
       <Topbar title="Inventory & Supply" subtitle="Stock levels, par stock alerts, ferry deliveries" />
-      <main className="flex-1 p-8 space-y-6">
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <KpiCard label="Total SKUs" value={inventory.length.toString()} icon={Package} hint="tracked items" />
           <KpiCard label="Low stock" value={low.length.toString()} icon={AlertTriangle} hint="need reorder" />
@@ -60,7 +60,8 @@ export default function InventoryPage() {
             <h2 className="font-semibold text-lg">All inventory</h2>
             <p className="text-xs text-muted">Stock vs. par level</p>
           </div>
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[820px]">
             <thead className="bg-background text-muted text-xs uppercase tracking-wide">
               <tr>
                 <th className="text-left px-6 py-3 font-semibold">SKU</th>
@@ -107,6 +108,7 @@ export default function InventoryPage() {
               })}
             </tbody>
           </table>
+          </div>
         </div>
       </main>
     </>

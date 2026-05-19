@@ -36,7 +36,7 @@ export default function ReviewsPage() {
   return (
     <>
       <Topbar title="Customer Reviews" subtitle="Google · Facebook · TripAdvisor" />
-      <main className="flex-1 p-8 space-y-6">
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <KpiCard label="Avg. rating" value={`${reviewStats.average} ★`} icon={Star} hint={`${reviewStats.total} total reviews`} />
           <KpiCard label="This week" value={reviewStats.thisWeek.toString()} icon={MessageSquare} hint="new reviews" />
