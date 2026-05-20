@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LayoutDashboard, ShoppingBag, Package, Users, Star, Menu, X } from "lucide-react";
+import { useApp } from "@/lib/app-provider";
 import { cn } from "@/lib/utils";
 
 const nav = [
@@ -16,6 +17,7 @@ const nav = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { data } = useApp();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -100,9 +102,9 @@ export function Sidebar() {
         </nav>
 
         <div className="px-4 py-4 border-t border-white/10 text-xs text-white/70">
-          <div className="font-semibold text-white">Lubang Island</div>
-          <div>Occidental Mindoro</div>
-          <div className="mt-2 opacity-60">v0.1.0 · Portfolio Demo</div>
+          <div className="font-semibold text-white">{data.branch.location}</div>
+          <div className="font-mono opacity-70">{data.branch.fullCode}</div>
+          <div className="mt-2 opacity-60">v0.2.0 · Portfolio Demo</div>
           <div className="mt-1 opacity-50 text-[10px] leading-tight">
             Fictional brand. Not a real business.
           </div>

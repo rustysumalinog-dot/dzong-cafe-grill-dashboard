@@ -33,9 +33,9 @@ export function KpiCard({
           <span
             className={cn(
               "inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-semibold",
-              isPositive && "bg-green-100 text-green-700",
-              isNegative && "bg-red-100 text-red-700",
-              !isPositive && !isNegative && "bg-gray-100 text-gray-600"
+              isPositive && "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-300",
+              isNegative && "bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300",
+              !isPositive && !isNegative && "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300"
             )}
           >
             {delta > 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}

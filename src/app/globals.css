@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #faf7f2;
   --foreground: #1c1410;
@@ -11,6 +13,19 @@
   --dzong-amber: #f59e0b;
   --dzong-amber-dark: #d97706;
   --dzong-cream: #fef3e2;
+}
+
+.dark {
+  --background: #0e0d0b;
+  --foreground: #f5f0e8;
+  --card: #1a1815;
+  --border: #2a2723;
+  --muted: #9a9088;
+  --dzong-terracotta: #ea580c;
+  --dzong-terracotta-dark: #c2410c;
+  --dzong-amber: #fbbf24;
+  --dzong-amber-dark: #f59e0b;
+  --dzong-cream: #2a2520;
 }
 
 @theme inline {
@@ -32,4 +47,20 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--border) 0%,
+    color-mix(in srgb, var(--border) 60%, transparent) 50%,
+    var(--border) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
 }

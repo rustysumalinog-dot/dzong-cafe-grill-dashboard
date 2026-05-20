@@ -1,19 +1,22 @@
+"use client";
+
+import { useMemo } from "react";
 import { Topbar } from "@/components/topbar";
 import { KpiCard } from "@/components/kpi-card";
-import { reviews, reviewStats } from "@/lib/mock-data";
+import { useApp } from "@/lib/app-provider";
 import { cn } from "@/lib/utils";
 import { Star, MessageSquare, TrendingUp, Reply } from "lucide-react";
 
 const sentimentStyles: Record<string, string> = {
-  positive: "bg-green-100 text-green-700",
-  neutral: "bg-gray-100 text-gray-600",
-  negative: "bg-red-100 text-red-700",
+  positive: "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-300",
+  neutral: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300",
+  negative: "bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300",
 };
 
 const sourceStyles: Record<string, string> = {
-  Google: "bg-blue-100 text-blue-700",
-  Facebook: "bg-indigo-100 text-indigo-700",
-  TripAdvisor: "bg-emerald-100 text-emerald-700",
+  Google: "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300",
+  Facebook: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300",
+  TripAdvisor: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300",
 };
 
 function Stars({ rating }: { rating: number }) {
@@ -23,7 +26,7 @@ function Stars({ rating }: { rating: number }) {
         <Star
           key={n}
           size={14}
-          className={cn(n <= rating ? "fill-dzong-amber text-dzong-amber" : "text-gray-300")}
+          className={cn(n <= rating ? "fill-dzong-amber text-dzong-amber" : "text-gray-300 dark:text-gray-700")}
         />
       ))}
     </div>
@@ -31,6 +34,21 @@ function Stars({ rating }: { rating: number }) {
 }
 
 export default function ReviewsPage() {
+  const { data, search } = useApp();
+  const { reviews, reviewStats } = data;
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return reviews;
+    return reviews.filter(
+      (r) =>
+        r.author.toLowerCase().includes(q) ||
+        r.text.toLowerCase().includes(q) ||
+        r.source.toLowerCase().includes(q) ||
+        r.sentiment.toLowerCase().includes(q)
+    );
+  }, [reviews, search]);
+
   const pendingReply = reviews.filter((r) => !r.responded);
 
   return (
@@ -53,7 +71,7 @@ export default function ReviewsPage() {
                 </span>
                 <Stars rating={Math.round(s.avg)} />
               </div>
-              <div className="text-2xl font-bold">{s.avg.toFixed(1)} <span className="text-base text-muted font-normal">/ 5</span></div>
+              <div className="text-2xl font-bold text-foreground">{s.avg.toFixed(1)} <span className="text-base text-muted font-normal">/ 5</span></div>
               <div className="text-xs text-muted mt-1">{s.count} reviews</div>
             </div>
           ))}
@@ -61,45 +79,53 @@ export default function ReviewsPage() {
 
         <div className="bg-card border border-border rounded-xl">
           <div className="px-6 py-4 border-b border-border">
-            <h2 className="font-semibold text-lg">Recent reviews</h2>
-            <p className="text-xs text-muted">Most recent first</p>
+            <h2 className="font-semibold text-lg text-foreground">Recent reviews</h2>
+            <p className="text-xs text-muted">
+              Most recent first{search && ` · filtered by "${search}"`}
+            </p>
           </div>
-          <ul className="divide-y divide-border">
-            {reviews.map((r) => (
-              <li key={r.id} className="px-6 py-5 hover:bg-background/60">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-dzong-amber/40 flex items-center justify-center text-dzong-terracotta font-bold text-sm shrink-0">
-                    {r.author.split(" ").map((n) => n[0]).join("")}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap mb-1">
-                      <span className="font-semibold">{r.author}</span>
-                      <span className={cn("text-xs px-2 py-0.5 rounded-full font-semibold", sourceStyles[r.source])}>
-                        {r.source}
-                      </span>
-                      <Stars rating={r.rating} />
-                      <span className="text-xs text-muted">· {r.date}</span>
-                      <span className={cn("text-xs px-2 py-0.5 rounded-full font-semibold ml-auto", sentimentStyles[r.sentiment])}>
-                        {r.sentiment}
-                      </span>
+          {filtered.length === 0 ? (
+            <div className="px-6 py-10 text-center text-muted text-sm">
+              Walang review na tugma sa &ldquo;{search}&rdquo;.
+            </div>
+          ) : (
+            <ul className="divide-y divide-border">
+              {filtered.map((r) => (
+                <li key={r.id} className="px-6 py-5 hover:bg-background/60">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-full bg-dzong-amber/40 flex items-center justify-center text-dzong-terracotta font-bold text-sm shrink-0">
+                      {r.author.split(" ").map((n) => n[0]).join("")}
                     </div>
-                    <p className="text-sm text-foreground leading-relaxed">{r.text}</p>
-                    <div className="mt-3 flex items-center gap-3">
-                      {r.responded ? (
-                        <span className="text-xs text-green-700 inline-flex items-center gap-1 font-semibold">
-                          <Reply size={12} /> Responded
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <span className="font-semibold text-foreground">{r.author}</span>
+                        <span className={cn("text-xs px-2 py-0.5 rounded-full font-semibold", sourceStyles[r.source])}>
+                          {r.source}
                         </span>
-                      ) : (
-                        <button className="text-xs px-3 py-1.5 rounded-lg bg-dzong-terracotta text-white font-semibold hover:bg-dzong-terracotta-dark inline-flex items-center gap-1">
-                          <Reply size={12} /> Reply now
-                        </button>
-                      )}
+                        <Stars rating={r.rating} />
+                        <span className="text-xs text-muted">· {r.date}</span>
+                        <span className={cn("text-xs px-2 py-0.5 rounded-full font-semibold ml-auto", sentimentStyles[r.sentiment])}>
+                          {r.sentiment}
+                        </span>
+                      </div>
+                      <p className="text-sm text-foreground leading-relaxed">{r.text}</p>
+                      <div className="mt-3 flex items-center gap-3">
+                        {r.responded ? (
+                          <span className="text-xs text-green-700 dark:text-green-400 inline-flex items-center gap-1 font-semibold">
+                            <Reply size={12} /> Responded
+                          </span>
+                        ) : (
+                          <button className="text-xs px-3 py-1.5 rounded-lg bg-dzong-terracotta text-white font-semibold hover:bg-dzong-terracotta-dark inline-flex items-center gap-1">
+                            <Reply size={12} /> Reply now
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </main>
     </>

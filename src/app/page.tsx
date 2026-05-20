@@ -1,15 +1,10 @@
+"use client";
+
 import { Topbar } from "@/components/topbar";
 import { KpiCard } from "@/components/kpi-card";
 import { SalesChart } from "@/components/charts/sales-chart";
 import { TrafficChart } from "@/components/charts/traffic-chart";
-import {
-  branch,
-  todayKPIs,
-  weekSales,
-  hourlyTraffic,
-  topItems,
-  nextFerry,
-} from "@/lib/mock-data";
+import { useApp } from "@/lib/app-provider";
 import { formatPHP, formatNumber } from "@/lib/utils";
 import {
   DollarSign,
@@ -21,6 +16,8 @@ import {
 } from "lucide-react";
 
 export default function OverviewPage() {
+  const { data } = useApp();
+  const { branch, todayKPIs, weekSales, hourlyTraffic, topItems, nextFerry } = data;
   const top5 = topItems.slice(0, 5);
 
   return (
@@ -64,9 +61,9 @@ export default function OverviewPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 bg-card border border-border rounded-xl p-6">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
               <div>
-                <h2 className="font-semibold text-lg">Sales this week</h2>
+                <h2 className="font-semibold text-lg text-foreground">Sales this week</h2>
                 <p className="text-xs text-muted">Mon – Sun, in PHP</p>
               </div>
               <div className="text-xs px-2.5 py-1 rounded-full bg-dzong-amber/20 text-dzong-terracotta font-semibold inline-flex items-center gap-1">
@@ -79,7 +76,7 @@ export default function OverviewPage() {
           <div className="bg-card border border-border rounded-xl p-6">
             <div className="flex items-center gap-2 mb-1">
               <Ship size={18} className="text-dzong-terracotta" />
-              <h2 className="font-semibold text-lg">Next ferry delivery</h2>
+              <h2 className="font-semibold text-lg text-foreground">Next ferry delivery</h2>
             </div>
             <p className="text-xs text-muted mb-4">{nextFerry.vessel}</p>
 
@@ -98,11 +95,11 @@ export default function OverviewPage() {
             <div className="mt-5 pt-5 border-t border-border space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted">Port</span>
-                <span className="font-medium">{nextFerry.port}</span>
+                <span className="font-medium text-foreground">{nextFerry.port}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted">Order cutoff</span>
-                <span className="font-medium">{nextFerry.cutoffOrder}</span>
+                <span className="font-medium text-foreground">{nextFerry.cutoffOrder}</span>
               </div>
             </div>
 
@@ -114,13 +111,13 @@ export default function OverviewPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 bg-card border border-border rounded-xl p-6">
-            <h2 className="font-semibold text-lg mb-1">Hourly customer traffic</h2>
-            <p className="text-xs text-muted mb-4">Today, 9 AM – 9 PM</p>
+            <h2 className="font-semibold text-lg text-foreground mb-1">Hourly customer traffic</h2>
+            <p className="text-xs text-muted mb-4">Today · {branch.hours}</p>
             <TrafficChart data={hourlyTraffic} />
           </div>
 
           <div className="bg-card border border-border rounded-xl p-6">
-            <h2 className="font-semibold text-lg mb-1">Top items today</h2>
+            <h2 className="font-semibold text-lg text-foreground mb-1">Top items today</h2>
             <p className="text-xs text-muted mb-4">By units sold</p>
             <ul className="space-y-3">
               {top5.map((item, i) => (
@@ -129,10 +126,10 @@ export default function OverviewPage() {
                     {i + 1}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium truncate">{item.name}</div>
+                    <div className="text-sm font-medium text-foreground truncate">{item.name}</div>
                     <div className="text-xs text-muted">{formatPHP(item.revenue)}</div>
                   </div>
-                  <div className="text-sm font-semibold">{item.sold}</div>
+                  <div className="text-sm font-semibold text-foreground">{item.sold}</div>
                 </li>
               ))}
             </ul>
